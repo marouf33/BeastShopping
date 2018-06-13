@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_register_linear_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/register_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/logo_two"
+            app:layout_constraintBottom_toTopOf="@id/activity_register_usrEmail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <EditText
+            android:id="@+id/activity_register_usrEmail"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary"
+            android:drawableLeft="@mipmap/ic_emailicon"
+            android:drawableStart="@mipmap/ic_emailicon"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="14dp"
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/register_img"
+            app:layout_constraintBottom_toTopOf="@id/activity_register_userName"/>
+
+        <EditText
+            android:id="@+id/activity_register_userName"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorPrimary"
+            android:hint="Please Enter Your Name"
+            android:padding="14dp"
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_register_usrEmail"
+            app:layout_constraintBottom_toTopOf="@id/activity_register_registerButton"/>
+
+        <Button
+            android:id="@+id/activity_register_registerButton"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_background"
+            android:text="Register"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activity_register_userName"
+            app:layout_constraintBottom_toTopOf="@id/activity_register_loginButton"/>
+
+        <Button
+            android:id="@+id/activity_register_loginButton"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_background"
+            android:text="Already Registered? Log In"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_register_registerButton"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        <ProgressBar
+            android:id="@+id/register_progressBar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activity_register_loginButton" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>

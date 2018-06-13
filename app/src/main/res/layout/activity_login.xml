@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_login_linear_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/register_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/logo_two"
+            app:layout_constraintBottom_toTopOf="@id/activity_login_userEmail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <EditText
+            android:id="@+id/activity_login_userEmail"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/colorPrimary"
+            android:drawableLeft="@mipmap/ic_emailicon"
+            android:drawableStart="@mipmap/ic_emailicon"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="14dp"
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@id/activity_login_userPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/register_img" />
+
+        <EditText
+            android:id="@+id/activity_login_userPassword"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/colorPrimary"
+            android:drawableLeft="@mipmap/ic_lockicon"
+            android:drawableStart="@mipmap/ic_lockicon"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="14dp"
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@id/activitiy_login_loginButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_login_userEmail" />
+
+        <Button
+            android:id="@+id/activitiy_login_loginButton"
+            android:layout_width="205dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/button_background"
+            android:text="Sign In"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/activitiy_login_RegisterButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activity_login_userPassword" />
+
+        <Button
+            android:id="@+id/activitiy_login_RegisterButton"
+            android:layout_width="205dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_background"
+            android:text="No Account? SignUp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activitiy_login_loginButton"
+            app:layout_constraintBottom_toTopOf="@id/activity_login_facebook_button"/>
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/activity_login_facebook_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activitiy_login_RegisterButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <ProgressBar
+            android:id="@+id/login_progressBar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activitiy_login_RegisterButton"
+            app:layout_constraintVertical_bias="0.9" />
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>
