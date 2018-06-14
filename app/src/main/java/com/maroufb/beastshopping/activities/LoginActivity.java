@@ -62,7 +62,6 @@ public class LoginActivity  extends  BaseActivity{
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         mLinearLayout.setBackgroundResource(R.drawable.background_screen_two)        ;
-        FirebaseAuth.getInstance().signOut();
         mProgressBar.setVisibility(View.GONE);
     }
 
