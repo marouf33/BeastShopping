@@ -1,6 +1,8 @@
 package com.maroufb.beastshopping.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.maroufb.beastshopping.R;
+import com.maroufb.beastshopping.infrastructure.Utils;
 import com.maroufb.beastshopping.services.AccountServices;
 import com.squareup.otto.Subscribe;
 
@@ -49,12 +52,14 @@ public class LoginActivity  extends  BaseActivity{
     EditText userPassword;
 
     @BindView(R.id.login_progressBar)
-    ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
 
     @BindView(R.id.activity_login_facebook_button)
     LoginButton facebookButton;
 
-    CallbackManager mCllbackManager;
+    private CallbackManager mCllbackManager;
+
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +68,8 @@ public class LoginActivity  extends  BaseActivity{
         ButterKnife.bind(this);
         mLinearLayout.setBackgroundResource(R.drawable.background_screen_two)        ;
         mProgressBar.setVisibility(View.GONE);
+
+        mSharedPreferences = getSharedPreferences(Utils.MY_PREFERENCE, Context.MODE_PRIVATE);
     }
 
     @OnClick(R.id.activitiy_login_RegisterButton)
@@ -73,7 +80,7 @@ public class LoginActivity  extends  BaseActivity{
 
     @OnClick(R.id.activitiy_login_loginButton)
     public void setLoginButton(){
-        bus.post(new AccountServices.LoginUserRequest(userEmail.getText().toString(),userPassword.getText().toString(),mProgressBar ));
+        bus.post(new AccountServices.LoginUserRequest(userEmail.getText().toString(),userPassword.getText().toString(),mProgressBar,mSharedPreferences ));
     }
 
     @Subscribe
@@ -98,7 +105,7 @@ public class LoginActivity  extends  BaseActivity{
                         try{
                             String email = object.getString("email");
                             String name = object.getString("name");
-                            bus.post(new AccountServices.LogUserInFacebookRequest(loginResult.getAccessToken(),mProgressBar,name,email));
+                            bus.post(new AccountServices.LogUserInFacebookRequest(loginResult.getAccessToken(),mProgressBar,name,email,mSharedPreferences));
                         }   catch (JSONException e){
                             e.printStackTrace();
                         }

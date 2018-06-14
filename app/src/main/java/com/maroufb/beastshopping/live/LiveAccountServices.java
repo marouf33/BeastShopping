@@ -1,5 +1,7 @@
 package com.maroufb.beastshopping.live;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Toast;
@@ -15,6 +17,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.maroufb.beastshopping.activities.LoginActivity;
+import com.maroufb.beastshopping.enitites.User;
 import com.maroufb.beastshopping.infrastructure.BeastShoppingApplication;
 import com.maroufb.beastshopping.infrastructure.Utils;
 import com.maroufb.beastshopping.services.AccountServices;
@@ -76,6 +80,9 @@ public class LiveAccountServices extends BaseLiveService {
                                                     Toast.makeText(mApplication.getApplicationContext(),"Please Check Your Email", Toast.LENGTH_LONG).show();
                                                     request.mProgressBar.setVisibility(View.GONE);
 
+                                                    Intent intent = new Intent(mApplication.getApplicationContext(), LoginActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    mApplication.startActivity(intent);
                                                 }
                                             }
                                         });
@@ -109,11 +116,35 @@ public class LiveAccountServices extends BaseLiveService {
                         request.mProgressBar.setVisibility(View.GONE);
                         Toast.makeText(mApplication.getApplicationContext(),task.getException().getLocalizedMessage(),Toast.LENGTH_LONG).show();
                     }else{
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users")
+                        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users")
                                 .child(Utils.encodeEmail(request.userEMail));
-                        reference.child("hasLoggedInWithPassword").setValue(true);
-                        request.mProgressBar.setVisibility(View.GONE);
-                        Toast.makeText(mApplication.getApplicationContext(),"User has logged in!", Toast.LENGTH_LONG).show();
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                User user = dataSnapshot.getValue(User.class);
+                                if(user != null){
+                                    reference.child("hasLoggedInWithPassword").setValue(true);
+                                    SharedPreferences sharedPreferences = request.mSharedPreferences;
+                                    sharedPreferences.edit().putString(Utils.EMAIL,Utils.encodeEmail((user.getEmail()))).apply();
+                                    sharedPreferences.edit().putString(Utils.USERNAME,user.getName()).apply();
+
+                                    request.mProgressBar.setVisibility(View.GONE);
+                                    Intent intent = new Intent(mApplication.getApplicationContext(), LoginActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    mApplication.startActivity(intent);
+                                }else{
+                                    request.mProgressBar.setVisibility(View.GONE);
+                                    Toast.makeText(mApplication.getApplicationContext(),"Failed to connect to server: Please try again",Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                request.mProgressBar.setVisibility(View.GONE);
+                                Toast.makeText(mApplication.getApplicationContext(),databaseError.getMessage(),Toast.LENGTH_LONG).show();
+                            }
+                        });
+
                     }
                 }
             });
@@ -158,8 +189,14 @@ public class LiveAccountServices extends BaseLiveService {
                         }
                     });
 
+                    SharedPreferences sharedPreferences = request.mSharedPreferences;
+                    sharedPreferences.edit().putString(Utils.EMAIL,Utils.encodeEmail((request.userEmail))).apply();
+                    sharedPreferences.edit().putString(Utils.USERNAME,request.userName).apply();
+
                     request.mProgressBar.setVisibility(View.GONE);
-                    Toast.makeText(mApplication.getApplicationContext(),"User has logged in!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(mApplication.getApplicationContext(), LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mApplication.startActivity(intent);
                 }
             }
         });

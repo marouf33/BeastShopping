@@ -1,6 +1,7 @@
 package com.maroufb.beastshopping.services;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.widget.ProgressBar;
 
 import com.facebook.AccessToken;
@@ -29,12 +30,16 @@ public class AccountServices {
         public String userEMail;
         public String userPassword;
         public ProgressBar mProgressBar;
+        public SharedPreferences mSharedPreferences;
 
-        public LoginUserRequest(String userEMail, String userPassword, ProgressBar progressBar) {
+        public LoginUserRequest(String userEMail, String userPassword, ProgressBar progressBar, SharedPreferences sharedPreferences) {
             this.userEMail = userEMail;
             this.userPassword = userPassword;
             mProgressBar = progressBar;
+            mSharedPreferences = sharedPreferences;
         }
+
+
     }
 
     public static class LogUserInResponse extends ServiceResponse{}
@@ -44,12 +49,14 @@ public class AccountServices {
         public ProgressBar mProgressBar;
         public String userName;
         public String userEmail;
+        public SharedPreferences mSharedPreferences;
 
-        public LogUserInFacebookRequest(AccessToken accessToken, ProgressBar progressBar, String userName, String userEmail) {
+        public LogUserInFacebookRequest(AccessToken accessToken, ProgressBar progressBar, String userName, String userEmail, SharedPreferences sharedPreferences) {
             mAccessToken = accessToken;
             mProgressBar = progressBar;
             this.userName = userName;
             this.userEmail = userEmail;
+            mSharedPreferences = sharedPreferences;
         }
     }
 
