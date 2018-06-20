@@ -75,8 +75,10 @@ public class LoginActivity  extends  BaseActivity{
 
     @OnClick(R.id.activitiy_login_RegisterButton)
     public void setRegisterButton(){
-        startActivity(new Intent(this,RegisterActivity.class));
-        finish();
+
+
+       startActivity(new Intent(this,RegisterActivity.class));
+       finish();
     }
 
     @OnClick(R.id.activitiy_login_loginButton)

@@ -1,8 +1,10 @@
 package com.maroufb.beastshopping.activities;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,21 +14,30 @@ import android.widget.ProgressBar;
 
 import com.facebook.login.LoginManager;
 import com.maroufb.beastshopping.R;
+import com.maroufb.beastshopping.dialog.AddListDialogFragment;
 import com.maroufb.beastshopping.infrastructure.Utils;
+import com.maroufb.beastshopping.services.ShoppingListService;
+import com.squareup.otto.Subscribe;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
     @BindView(R.id.activity_main_progressBar)
     ProgressBar mProgressBar;
 
+    @BindView(R.id.activity_main_FAB)
+    FloatingActionButton mFloatingActionButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mProgressBar = findViewById(R.id.activity_main_progressBar);
-       mProgressBar.setVisibility(View.GONE);
+        ButterKnife.bind(this);
+
+        mProgressBar.setVisibility(View.GONE);
         String toolBarName;
 
         if(userName.contains(" ")){
@@ -69,4 +80,12 @@ public class MainActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @OnClick(R.id.activity_main_FAB)
+    public void setFloatingActionButton(){
+        DialogFragment dialogFragment = AddListDialogFragment.newInstance();
+        dialogFragment.show(getFragmentManager(),AddListDialogFragment.class.getSimpleName());
+    }
+
+
 }

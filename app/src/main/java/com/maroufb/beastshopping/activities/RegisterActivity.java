@@ -69,4 +69,11 @@ public class RegisterActivity extends BaseActivity{
             userName.setError(response.getPropertyError("userName"));
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this,LoginActivity.class));
+        finish();
+    }
 }
