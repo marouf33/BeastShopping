@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -52,7 +53,7 @@ public class LoginActivity  extends  BaseActivity{
     EditText userPassword;
 
     @BindView(R.id.login_progressBar)
-    private ProgressBar mProgressBar;
+    ProgressBar mProgressBar;
 
     @BindView(R.id.activity_login_facebook_button)
     LoginButton facebookButton;

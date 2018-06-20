@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.maroufb.beastshopping.activities.LoginActivity;
+import com.maroufb.beastshopping.activities.MainActivity;
 import com.maroufb.beastshopping.enitites.User;
 import com.maroufb.beastshopping.infrastructure.BeastShoppingApplication;
 import com.maroufb.beastshopping.infrastructure.Utils;
@@ -129,8 +130,8 @@ public class LiveAccountServices extends BaseLiveService {
                                     sharedPreferences.edit().putString(Utils.USERNAME,user.getName()).apply();
 
                                     request.mProgressBar.setVisibility(View.GONE);
-                                    Intent intent = new Intent(mApplication.getApplicationContext(), LoginActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    Intent intent = new Intent(mApplication.getApplicationContext(), MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
                                     mApplication.startActivity(intent);
                                 }else{
                                     request.mProgressBar.setVisibility(View.GONE);
@@ -194,8 +195,8 @@ public class LiveAccountServices extends BaseLiveService {
                     sharedPreferences.edit().putString(Utils.USERNAME,request.userName).apply();
 
                     request.mProgressBar.setVisibility(View.GONE);
-                    Intent intent = new Intent(mApplication.getApplicationContext(), LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Intent intent = new Intent(mApplication.getApplicationContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
                     mApplication.startActivity(intent);
                 }
             }
