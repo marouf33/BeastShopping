@@ -1,6 +1,8 @@
 package com.maroufb.beastshopping.services;
 
+import com.maroufb.beastshopping.enitites.ShoppingList;
 import com.maroufb.beastshopping.infrastructure.ServiceResponse;
+import com.squareup.otto.Subscribe;
 
 public class ShoppingListService {
 
@@ -22,4 +24,16 @@ public class ShoppingListService {
     public static class AddShoppingListRsponse extends ServiceResponse {
 
     }
+
+    public static class DeleteShoppingListRequest {
+        public String ownerEmail;
+        public String shoppingListId;
+
+        public DeleteShoppingListRequest(String ownerEmail, String shoppingListId) {
+            this.ownerEmail = ownerEmail;
+            this.shoppingListId = shoppingListId;
+        }
+    }
+
+
 }

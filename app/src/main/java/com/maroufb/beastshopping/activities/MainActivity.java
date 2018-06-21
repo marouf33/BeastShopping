@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.maroufb.beastshopping.R;
 import com.maroufb.beastshopping.dialog.AddListDialogFragment;
+import com.maroufb.beastshopping.dialog.DeleteListDialogFragment;
 import com.maroufb.beastshopping.enitites.ShoppingList;
 import com.maroufb.beastshopping.infrastructure.Utils;
 import com.maroufb.beastshopping.services.ShoppingListService;
@@ -96,14 +97,27 @@ public class MainActivity extends BaseActivity {
 
             @Override
             protected void onBindViewHolder(@NonNull ShoppingListViewHolder holder, int position, @NonNull final ShoppingList model) {
+                holder.populate(model);
                 holder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(getApplicationContext(),model.getListName() + " was clicked", Toast.LENGTH_LONG).show();
                     }
                 });
-                holder.populate(model);
 
+                holder.layout.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if(userEmail.equals(Utils.encodeEmail(model.getOwnerEmail()))){
+                            DialogFragment dialogFragment = DeleteListDialogFragment.newInstance(model.getId(),true);
+                            dialogFragment.show(getFragmentManager(),DeleteListDialogFragment.class.getSimpleName());
+                            return true;
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Only the owner can delete a list",Toast.LENGTH_LONG).show();
+                            return true;
+                        }
+                    }
+                });
             }
         };
 

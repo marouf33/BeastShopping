@@ -47,4 +47,11 @@ public class LiveShoppingService extends BaseLiveService {
 
        bus.post(response);
     }
+
+    @Subscribe
+    public void DeleteShoppingList(ShoppingListService.DeleteShoppingListRequest request){
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("userShoppingList")
+                .child(request.ownerEmail).child(request.shoppingListId);
+        reference.removeValue();
+    }
 }
