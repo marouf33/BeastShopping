@@ -122,7 +122,6 @@ public class LoginActivity  extends  BaseActivity{
 
             @Override
             public void onCancel() {
-                Toast.makeText(getApplication(),"An Unknown error occurred.",Toast.LENGTH_LONG).show();
             }
 
             @Override

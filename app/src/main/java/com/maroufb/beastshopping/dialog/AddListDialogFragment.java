@@ -33,7 +33,6 @@ public class AddListDialogFragment extends BaseDialog implements View.OnClickLis
                 .setView(rootView)
                 .setPositiveButton("Create",null)
                 .setNegativeButton("Cancel",null)
-                .setTitle("Creat a list")
                 .show();
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(this);
         return alertDialog;
@@ -48,6 +47,8 @@ public class AddListDialogFragment extends BaseDialog implements View.OnClickLis
     public void AddShoppingList(ShoppingListService.AddShoppingListRsponse response){
         if(!response.didSucceed()){
             newListName.setError(response.getPropertyError("listName"));
+        }else{
+            dismiss();
         }
     }
 }

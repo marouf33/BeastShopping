@@ -14,6 +14,8 @@ public class Utils {
         return userEmail.replace(".",",");
     }
 
+    public static String decodeEmail(String userEmail) { return userEmail.replace(",","."); }
+
 
 
 }

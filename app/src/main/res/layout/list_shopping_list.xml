@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_shoppping_list_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="16dp"
+    android:paddingTop="16dp"
+    android:paddingRight="16dp"
+    android:paddingLeft="16dp">
+
+    <TextView
+        android:id="@+id/list_shopping_list_listName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="Shopping List Name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/list_shopping_list_listCreatedBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="Created By:"
+        app:layout_constraintEnd_toStartOf="@id/list_shopping_list_dateCreated"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_shopping_list_listName" />
+
+    <TextView
+        android:id="@+id/list_shopping_list_dateCreated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="01/01/2000"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/list_shopping_list_listName"
+        app:layout_constraintStart_toEndOf="@id/list_shopping_list_listCreatedBy"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/list_shopping_list_listOwnerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="John Doe"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/list_shopping_list_listName"
+        app:layout_constraintStart_toEndOf="@id/list_shopping_list_listCreatedBy"
+        android:layout_marginLeft="5dp"
+
+        />
+
+</android.support.constraint.ConstraintLayout>

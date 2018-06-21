@@ -7,9 +7,10 @@
         android:id="@+id/dialog_add_list_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Shopping List Name"
+        android:hint="Shopping List Name?"
         android:textColor="@color/black"
-        android:textColorHint="@color/black"
+        android:textColorHint="@color/colorAccent"
+        android:backgroundTint="@color/white"
         />
 
 </android.support.v7.widget.FitWindowsFrameLayout>
