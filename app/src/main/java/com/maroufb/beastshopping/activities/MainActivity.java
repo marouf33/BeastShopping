@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.maroufb.beastshopping.R;
 import com.maroufb.beastshopping.dialog.AddListDialogFragment;
 import com.maroufb.beastshopping.dialog.DeleteListDialogFragment;
@@ -76,9 +79,20 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("userShoppingList").child(userEmail);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        String sortOrder = sharedPreferences.getString(Utils.LIST_ORDER_PREFERENCE,Utils.ORDER_BY_KEY);
+
+        Query sortQuery;
+
+        if(sortOrder.equals(Utils.ORDER_BY_KEY)){
+            sortQuery = reference.orderByKey();
+        } else{
+            sortQuery = reference.orderByChild(sortOrder);
+        }
+
         FirebaseRecyclerOptions<ShoppingList> options =
                 new FirebaseRecyclerOptions.Builder<ShoppingList>()
-                        .setQuery(reference, ShoppingList.class)
+                        .setQuery(sortQuery, ShoppingList.class)
                         .build();
 
         mAdapter = new FirebaseRecyclerAdapter<ShoppingList,ShoppingListViewHolder>(options) {
@@ -160,6 +174,10 @@ public class MainActivity extends BaseActivity {
                 finish();
                 mProgressBar.setVisibility(View.GONE);
                 return true;
+            case R.id.action_sort:
+                startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
