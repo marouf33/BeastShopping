@@ -64,6 +64,7 @@ public class MainActivity extends BaseActivity {
         mProgressBar.setVisibility(View.GONE);
         String toolBarName;
 
+
         if(userName.contains(" ")){
             toolBarName = userName.substring(0,userName.indexOf(" "))+ "'s Shopping List";
         }else{
@@ -175,7 +176,9 @@ public class MainActivity extends BaseActivity {
                 mProgressBar.setVisibility(View.GONE);
                 return true;
             case R.id.action_sort:
-                startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(settingsIntent);
                 return true;
 
         }

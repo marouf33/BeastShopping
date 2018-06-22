@@ -3,6 +3,7 @@ package com.maroufb.beastshopping.infrastructure;
 import android.app.Application;
 
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.database.FirebaseDatabase;
 import com.maroufb.beastshopping.live.Module;
 import com.squareup.otto.Bus;
 
@@ -23,6 +24,7 @@ public class BeastShoppingApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Module.Register(this);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         AppEventsLogger.activateApp(this);
     }
 
