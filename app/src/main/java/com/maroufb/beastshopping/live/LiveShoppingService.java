@@ -1,10 +1,14 @@
 package com.maroufb.beastshopping.live;
 
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.maroufb.beastshopping.enitites.ShoppingList;
 import com.maroufb.beastshopping.infrastructure.BeastShoppingApplication;
 import com.maroufb.beastshopping.infrastructure.Utils;
@@ -12,6 +16,7 @@ import com.maroufb.beastshopping.services.ShoppingListService;
 import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class LiveShoppingService extends BaseLiveService {
     public LiveShoppingService(BeastShoppingApplication application) {
@@ -53,5 +58,47 @@ public class LiveShoppingService extends BaseLiveService {
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("userShoppingList")
                 .child(request.ownerEmail).child(request.shoppingListId);
         reference.removeValue();
+    }
+
+    @Subscribe
+    public void ChangeListName(ShoppingListService.ChangeListNameRequest request){
+        ShoppingListService.ChangeListNameResponse response = new ShoppingListService.ChangeListNameResponse();
+        if(request.newShoppingListName.isEmpty()){
+            response.setPropertyErrors("listName", "Shopping list must have a name");
+        }
+
+        if(response.didSucceed()){
+            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("userShoppingList")
+                    .child(request.shoppingListOwnerEmail).child(request.shoppingListId);
+            HashMap<String,Object> timeLastChanged = new HashMap<>();
+            timeLastChanged.put("date", ServerValue.TIMESTAMP);
+
+            Map newListData = new HashMap();
+            newListData.put("listName", request.newShoppingListName);
+            newListData.put("dateLastChanged",timeLastChanged);
+            reference.updateChildren(newListData);
+        }
+
+        bus.post(response);
+    }
+
+    @Subscribe
+    public void getCurrentShoppingList(ShoppingListService.GetCurrentShoppingListRequest request){
+        final ShoppingListService.GetCurrentShoppingListResponse response = new ShoppingListService.GetCurrentShoppingListResponse();
+        response.mValueEventListener = request.reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                response.mShoppingList = dataSnapshot.getValue(ShoppingList.class);
+                if(response.mShoppingList!=null){
+                    bus.post(response);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(mApplication.getApplicationContext(),databaseError.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

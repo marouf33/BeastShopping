@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.common.util.Strings;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -36,6 +37,8 @@ import com.maroufb.beastshopping.infrastructure.Utils;
 import com.maroufb.beastshopping.services.ShoppingListService;
 import com.maroufb.beastshopping.views.ShoppingListViews.ShoppingListViewHolder;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -116,7 +119,11 @@ public class MainActivity extends BaseActivity {
                 holder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(),model.getListName() + " was clicked", Toast.LENGTH_LONG).show();
+                        ArrayList<String> shoppingListInfo = new ArrayList<>();
+                        shoppingListInfo.add(model.getId());
+                        shoppingListInfo.add(model.getListName());
+                        shoppingListInfo.add(model.getOwnerEmail());
+                        startActivity(ListDetailsActivity.newInstance(getApplicationContext(),shoppingListInfo));
                     }
                 });
 

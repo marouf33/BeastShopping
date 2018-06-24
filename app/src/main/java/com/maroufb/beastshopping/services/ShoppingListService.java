@@ -1,5 +1,8 @@
 package com.maroufb.beastshopping.services;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.maroufb.beastshopping.enitites.ShoppingList;
 import com.maroufb.beastshopping.infrastructure.ServiceResponse;
 import com.squareup.otto.Subscribe;
@@ -35,5 +38,33 @@ public class ShoppingListService {
         }
     }
 
+    public static class ChangeListNameRequest{
+        public String newShoppingListName;
+        public String shoppingListId;
+        public String shoppingListOwnerEmail;
+
+        public ChangeListNameRequest(String newShoppingListName, String shoppingListId, String shoppingListOwnerEmail) {
+            this.newShoppingListName = newShoppingListName;
+            this.shoppingListId = shoppingListId;
+            this.shoppingListOwnerEmail = shoppingListOwnerEmail;
+        }
+    }
+
+    public static class ChangeListNameResponse extends ServiceResponse{
+
+    }
+
+    public static class GetCurrentShoppingListRequest{
+        public DatabaseReference reference;
+
+        public GetCurrentShoppingListRequest(DatabaseReference reference) {
+            this.reference = reference;
+        }
+    }
+
+    public static class GetCurrentShoppingListResponse{
+        public ShoppingList mShoppingList;
+        public ValueEventListener mValueEventListener;
+    }
 
 }
