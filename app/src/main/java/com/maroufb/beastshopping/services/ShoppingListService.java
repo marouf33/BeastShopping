@@ -9,6 +9,8 @@ import com.squareup.otto.Subscribe;
 
 public class ShoppingListService {
 
+
+
     private ShoppingListService() {
     }
 
@@ -66,5 +68,6 @@ public class ShoppingListService {
         public ShoppingList mShoppingList;
         public ValueEventListener mValueEventListener;
     }
+
 
 }

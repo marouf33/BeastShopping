@@ -6,4 +6,5 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="list_item_pressed">#E3F2FD</color>
+    <color name="orange">#FFFF8800</color>
 </resources>

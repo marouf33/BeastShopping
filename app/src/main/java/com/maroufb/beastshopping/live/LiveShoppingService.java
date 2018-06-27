@@ -9,9 +9,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.maroufb.beastshopping.enitites.ShoppingItem;
 import com.maroufb.beastshopping.enitites.ShoppingList;
 import com.maroufb.beastshopping.infrastructure.BeastShoppingApplication;
 import com.maroufb.beastshopping.infrastructure.Utils;
+import com.maroufb.beastshopping.services.ItemService;
 import com.maroufb.beastshopping.services.ShoppingListService;
 import com.squareup.otto.Subscribe;
 
@@ -57,7 +59,10 @@ public class LiveShoppingService extends BaseLiveService {
     public void DeleteShoppingList(ShoppingListService.DeleteShoppingListRequest request){
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("userShoppingList")
                 .child(request.ownerEmail).child(request.shoppingListId);
+        final DatabaseReference dreference = FirebaseDatabase.getInstance().getReference().child("shoppingListItems")
+                .child(request.shoppingListId);
         reference.removeValue();
+        dreference.removeValue();
     }
 
     @Subscribe
@@ -101,4 +106,6 @@ public class LiveShoppingService extends BaseLiveService {
             }
         });
     }
+
+
 }

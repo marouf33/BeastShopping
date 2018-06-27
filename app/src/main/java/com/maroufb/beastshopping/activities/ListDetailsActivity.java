@@ -1,30 +1,41 @@
 package com.maroufb.beastshopping.activities;
 
-import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toolbar;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.maroufb.beastshopping.R;
+import com.maroufb.beastshopping.dialog.AddItemDialogFragment;
+import com.maroufb.beastshopping.dialog.ChangeItemNameDialogFragment;
 import com.maroufb.beastshopping.dialog.ChangeListNameDialogFragment;
+import com.maroufb.beastshopping.dialog.DeleteItemDialogFragment;
+import com.maroufb.beastshopping.enitites.ShoppingItem;
 import com.maroufb.beastshopping.enitites.ShoppingList;
 import com.maroufb.beastshopping.services.ShoppingListService;
+import com.maroufb.beastshopping.views.ItemListViewHolder.ShoppingItemViewHolder;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ListDetailsActivity extends  BaseActivity{
 
@@ -43,6 +54,9 @@ public class ListDetailsActivity extends  BaseActivity{
     @BindView(R.id.activity_list_details_progressBar)
     ProgressBar mProgressBar;
 
+
+    RecyclerView mRecyclerView;
+    FirebaseRecyclerAdapter mAdapter;
 
     public static Intent newInstance(Context context, ArrayList<String> shoppingListInfo){
         Intent intent = new Intent(context,ListDetailsActivity.class);
@@ -67,6 +81,72 @@ public class ListDetailsActivity extends  BaseActivity{
 
         getSupportActionBar().setTitle(mShoppingName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mRecyclerView = findViewById(R.id.activity_list_details_listRecyclerView);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("shoppingListItems").child(mShoppingId);
+
+        FirebaseRecyclerOptions<ShoppingItem> options =
+                new FirebaseRecyclerOptions.Builder<ShoppingItem>()
+                        .setQuery(reference, ShoppingItem.class)
+                        .build();
+        mAdapter = new FirebaseRecyclerAdapter<ShoppingItem,ShoppingItemViewHolder>(options){
+            @NonNull
+            @Override
+            public ShoppingItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_item_view, parent, false);
+                ShoppingItemViewHolder shoppingItemViewHolder = new ShoppingItemViewHolder(view);
+                return shoppingItemViewHolder;
+
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull ShoppingItemViewHolder holder, int position, @NonNull final ShoppingItem model) {
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(mShoppingId,model.getId());
+                        dialogFragment.show(getFragmentManager(),DeleteItemDialogFragment.class.getSimpleName());
+                    }
+                };
+
+                View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        ArrayList<String> extraInfo = new ArrayList<>();
+                        extraInfo.add(model.getId());
+                        extraInfo.add(mShoppingId);
+                        extraInfo.add(userEmail);
+                        extraInfo.add(model.getItemName());
+                        DialogFragment dialogFragment = ChangeItemNameDialogFragment.newInstance(extraInfo);
+                        dialogFragment.show(getFragmentManager(),ChangeItemNameDialogFragment.class.getSimpleName());
+                        return true;
+                    }
+                };
+                holder.setChangeNameListener(longClickListener);
+                holder.setDeleteButtonListener(listener);
+                holder.populate(model);
+
+
+            }
+        };
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.startListening();
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAdapter.stopListening();
     }
 
     @Override
@@ -113,5 +193,13 @@ public class ListDetailsActivity extends  BaseActivity{
     protected void onDestroy() {
         super.onDestroy();
         mShoppingListReference.removeEventListener(mShoppingListListener);
+    }
+
+    @OnClick(R.id.activity_list_details_FAB)
+    public void setFloatingActionButton(){
+        ArrayList<String> shoppingItemInfo = new ArrayList<>();
+        shoppingItemInfo.add(mShoppingId);
+        DialogFragment dialogFragment = AddItemDialogFragment.newInstance(shoppingItemInfo);
+        dialogFragment.show(getFragmentManager(),AddItemDialogFragment.class.getSimpleName());
     }
 }

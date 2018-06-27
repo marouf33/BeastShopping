@@ -108,7 +108,6 @@ public class MainActivity extends BaseActivity {
                 View view = LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.list_shopping_list, parent, false);
                 ShoppingListViewHolder shoppingListViewHolder = new ShoppingListViewHolder(view);
-                parent.setTag(shoppingListViewHolder);
                 return shoppingListViewHolder;
 
             }
