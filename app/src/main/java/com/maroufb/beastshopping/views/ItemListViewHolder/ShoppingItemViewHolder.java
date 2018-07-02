@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.maroufb.beastshopping.R;
 import com.maroufb.beastshopping.enitites.ShoppingItem;
 import com.maroufb.beastshopping.infrastructure.BeastShoppingApplication;
+import com.maroufb.beastshopping.infrastructure.Utils;
 import com.maroufb.beastshopping.services.ItemService;
 import com.squareup.otto.Bus;
 
@@ -53,35 +54,26 @@ public class ShoppingItemViewHolder extends RecyclerView.ViewHolder {
         itemName.setOnLongClickListener(listener);
     }
 
-    public void toggleBoughtStatus(){
-        isBought = !isBought;
-        setUiElements(isBought,"You");
-
-    }
-
-    private void setUiElements(boolean isBought,String buyer){
-        if(isBought){
-            boughtBy.setVisibility(View.VISIBLE);
-            boughtByName.setText(buyer);
-            deleteButton.setImageResource(R.mipmap.ic_done);
-            itemName.setPaintFlags(itemName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
-        }else {
-            boughtBy.setVisibility(View.GONE);
-            boughtByName.setText("");
-            deleteButton.setImageResource(R.mipmap.ic_delete);
-            itemName.setPaintFlags(itemName.getPaintFlags() &(~ Paint.STRIKE_THRU_TEXT_FLAG));
-        }
-
-    }
-
 
 
     public void populate(ShoppingItem item,String currentUser){
         isBought = item.isBought();
         itemName.setText(item.getItemName());
-        String buyer = currentUser.equals(item.getBoughtBy()) ? "You" :  item.getBoughtBy();
-        setUiElements(isBought,buyer);
+        String buyer = currentUser.equals(item.getBoughtBy()) ? "You" : Utils.decodeEmail(item.getBoughtBy());
+        if(isBought){
+            boughtBy.setVisibility(View.VISIBLE);
+            boughtByName.setText(buyer);
+            deleteButton.setImageResource(R.mipmap.ic_done);
+            itemName.setPaintFlags(itemName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            deleteButton.setBackgroundResource(R.drawable.button_background_straight_green);
+
+        }else {
+            boughtBy.setVisibility(View.GONE);
+            boughtByName.setText("");
+            deleteButton.setImageResource(R.mipmap.ic_delete);
+            deleteButton.setBackgroundResource(R.drawable.button_background_straight_red);
+            itemName.setPaintFlags(itemName.getPaintFlags() &(~ Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
     }
 

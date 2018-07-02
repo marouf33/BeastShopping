@@ -61,15 +61,15 @@ public class DeleteListDialogFragment extends BaseDialog implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        if(mIsLongClicked){
-            dismiss();
-            bus.post(new ShoppingListService.DeleteShoppingListRequest(userEmail,mShoppingListId));
 
+        dismiss();
+        bus.post(new ShoppingListService.DeleteShoppingListRequest(userEmail,mShoppingListId));
+
+        if(mFinishParent){
             Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             getActivity().finish();
-
         }
     }
 }

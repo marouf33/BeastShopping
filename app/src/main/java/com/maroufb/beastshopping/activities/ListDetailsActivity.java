@@ -141,12 +141,14 @@ public class ListDetailsActivity extends  BaseActivity{
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        holder.toggleBoughtStatus();
-                        String buyer = "";
-                        if(!model.isBought()){
-                            buyer = userEmail;
+                        if((!model.isBought()) || (userEmail.equals(model.getBoughtBy()) && model.isBought())) {
+                            String buyer = "";
+                            if (!model.isBought()) {
+                                buyer = userEmail;
+                            }
+
+                            bus.post(new ItemService.ChangeItemBoughtStatusRequest(model.getId(), mShoppingId, model.getOwnerEmail(), buyer, !model.isBought()));
                         }
-                        bus.post(new ItemService.ChangeItemBoughtStatusRequest(model.getId(),mShoppingId,model.getOwnerEmail(),buyer,!model.isBought()));
                     }
                 });
                 holder.populate(model,userEmail);
@@ -186,7 +188,7 @@ public class ListDetailsActivity extends  BaseActivity{
                 return  true;
             case R.id.action_delete_list:
                 if(userEmail.equals(Utils.encodeEmail(userEmail))){
-                    DialogFragment ddialogFragment = DeleteListDialogFragment.newInstance(mShoppingId,true,true);
+                    DialogFragment ddialogFragment = DeleteListDialogFragment.newInstance(mShoppingId,false,true);
                     ddialogFragment.show(getFragmentManager(),DeleteListDialogFragment.class.getSimpleName());
 
                     return true;
