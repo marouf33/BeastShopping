@@ -99,4 +99,21 @@ public class LiveItemService extends BaseLiveService {
 
         bus.post(response);
     }
+
+    @Subscribe public void ChangeItemBougtStatus(ItemService.ChangeItemBoughtStatusRequest request){
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("shoppingListItems")
+                .child(request.shoppingListId).child(request.itemId);
+        final  DatabaseReference listReference = FirebaseDatabase.getInstance().getReference().child("userShoppingList")
+                .child(request.userEmail).child(request.shoppingListId);
+
+        HashMap<String,Object> timeLastChanged = new HashMap<>();
+        timeLastChanged.put("date", ServerValue.TIMESTAMP);
+        Map newListData = new HashMap(), changeBought = new HashMap();
+        newListData.put("dateLastChanged",timeLastChanged);
+        changeBought.put("bought",request.isBought);
+        changeBought.put("boughtBy",request.buyerEmail);
+        listReference.updateChildren(newListData);
+        reference.updateChildren(changeBought);
+
+    }
 }

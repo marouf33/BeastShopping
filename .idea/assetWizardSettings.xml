@@ -104,7 +104,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_delete_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_check_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -116,7 +116,7 @@
                                     <map>
                                       <entry key="iconShape" value="NONE" />
                                       <entry key="imageAsset" value="C:\DMLReview\logo_two.png" />
-                                      <entry key="outputName" value="ic_delete" />
+                                      <entry key="outputName" value="ic_done" />
                                     </map>
                                   </option>
                                 </PersistentState>

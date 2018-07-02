@@ -29,7 +29,7 @@
         android:id="@+id/list_shoppingItem_delete"
         android:layout_width="31dp"
         android:layout_height="21dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/button_background_straight"
         android:src="@mipmap/ic_delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/list_shopping_item_itemName"

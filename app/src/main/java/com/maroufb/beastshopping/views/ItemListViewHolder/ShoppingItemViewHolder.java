@@ -1,5 +1,6 @@
 package com.maroufb.beastshopping.views.ItemListViewHolder;
 
+import android.graphics.Paint;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -33,7 +34,8 @@ public class ShoppingItemViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.list_shoppingItem_delete)
     public ImageView deleteButton;
 
-
+    private boolean isBought;
+    private View.OnClickListener mOnClickListener;
 
     public ShoppingItemViewHolder(View itemView) {
         super(itemView);
@@ -44,20 +46,44 @@ public class ShoppingItemViewHolder extends RecyclerView.ViewHolder {
 
     public void setDeleteButtonListener(View.OnClickListener listener){
         deleteButton.setOnClickListener(listener);
+        mOnClickListener = listener;
     }
 
     public void setChangeNameListener(View.OnLongClickListener listener){
         itemName.setOnLongClickListener(listener);
     }
 
-    public void populate(ShoppingItem item){
-        itemName.setText(item.getItemName());
-        if(item.getBoughtBy() != null && !item.getBoughtBy().isEmpty()){
+    public void toggleBoughtStatus(){
+        isBought = !isBought;
+        setUiElements(isBought,"You");
+
+    }
+
+    private void setUiElements(boolean isBought,String buyer){
+        if(isBought){
             boughtBy.setVisibility(View.VISIBLE);
-            boughtByName.setText(item.getBoughtBy());
+            boughtByName.setText(buyer);
+            deleteButton.setImageResource(R.mipmap.ic_done);
+            itemName.setPaintFlags(itemName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
         }else {
             boughtBy.setVisibility(View.GONE);
             boughtByName.setText("");
+            deleteButton.setImageResource(R.mipmap.ic_delete);
+            itemName.setPaintFlags(itemName.getPaintFlags() &(~ Paint.STRIKE_THRU_TEXT_FLAG));
         }
+
     }
+
+
+
+    public void populate(ShoppingItem item,String currentUser){
+        isBought = item.isBought();
+        itemName.setText(item.getItemName());
+        String buyer = currentUser.equals(item.getBoughtBy()) ? "You" :  item.getBoughtBy();
+        setUiElements(isBought,buyer);
+
+    }
+
+
 }

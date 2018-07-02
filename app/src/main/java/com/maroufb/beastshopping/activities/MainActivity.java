@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public boolean onLongClick(View v) {
                         if(userEmail.equals(Utils.encodeEmail(model.getOwnerEmail()))){
-                            DialogFragment dialogFragment = DeleteListDialogFragment.newInstance(model.getId(),true);
+                            DialogFragment dialogFragment = DeleteListDialogFragment.newInstance(model.getId(),true,false);
                             dialogFragment.show(getFragmentManager(),DeleteListDialogFragment.class.getSimpleName());
                             return true;
                         }else{

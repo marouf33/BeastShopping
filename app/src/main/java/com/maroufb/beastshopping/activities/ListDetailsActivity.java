@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -25,8 +26,11 @@ import com.maroufb.beastshopping.dialog.AddItemDialogFragment;
 import com.maroufb.beastshopping.dialog.ChangeItemNameDialogFragment;
 import com.maroufb.beastshopping.dialog.ChangeListNameDialogFragment;
 import com.maroufb.beastshopping.dialog.DeleteItemDialogFragment;
+import com.maroufb.beastshopping.dialog.DeleteListDialogFragment;
 import com.maroufb.beastshopping.enitites.ShoppingItem;
 import com.maroufb.beastshopping.enitites.ShoppingList;
+import com.maroufb.beastshopping.infrastructure.Utils;
+import com.maroufb.beastshopping.services.ItemService;
 import com.maroufb.beastshopping.services.ShoppingListService;
 import com.maroufb.beastshopping.views.ItemListViewHolder.ShoppingItemViewHolder;
 import com.squareup.otto.Subscribe;
@@ -106,12 +110,14 @@ public class ListDetailsActivity extends  BaseActivity{
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull ShoppingItemViewHolder holder, int position, @NonNull final ShoppingItem model) {
+            protected void onBindViewHolder(@NonNull final ShoppingItemViewHolder holder, int position, @NonNull final ShoppingItem model) {
                 View.OnClickListener listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(mShoppingId,model.getId());
-                        dialogFragment.show(getFragmentManager(),DeleteItemDialogFragment.class.getSimpleName());
+                        if(!model.isBought()) {
+                            DialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(mShoppingId, model.getId());
+                            dialogFragment.show(getFragmentManager(), DeleteItemDialogFragment.class.getSimpleName());
+                        }
                     }
                 };
 
@@ -128,9 +134,22 @@ public class ListDetailsActivity extends  BaseActivity{
                         return true;
                     }
                 };
+
                 holder.setChangeNameListener(longClickListener);
                 holder.setDeleteButtonListener(listener);
-                holder.populate(model);
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        holder.toggleBoughtStatus();
+                        String buyer = "";
+                        if(!model.isBought()){
+                            buyer = userEmail;
+                        }
+                        bus.post(new ItemService.ChangeItemBoughtStatusRequest(model.getId(),mShoppingId,model.getOwnerEmail(),buyer,!model.isBought()));
+                    }
+                });
+                holder.populate(model,userEmail);
 
 
             }
@@ -165,6 +184,16 @@ public class ListDetailsActivity extends  BaseActivity{
                 DialogFragment dialogFragment = ChangeListNameDialogFragment.newInstance(shoppingListInfo);
                 dialogFragment.show(getFragmentManager(),ChangeListNameDialogFragment.class.getSimpleName());
                 return  true;
+            case R.id.action_delete_list:
+                if(userEmail.equals(Utils.encodeEmail(userEmail))){
+                    DialogFragment ddialogFragment = DeleteListDialogFragment.newInstance(mShoppingId,true,true);
+                    ddialogFragment.show(getFragmentManager(),DeleteListDialogFragment.class.getSimpleName());
+
+                    return true;
+                }else{
+                    Toast.makeText(getApplicationContext(),"Only the owner can delete a list",Toast.LENGTH_LONG).show();
+                    return true;
+                }
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -202,4 +231,6 @@ public class ListDetailsActivity extends  BaseActivity{
         DialogFragment dialogFragment = AddItemDialogFragment.newInstance(shoppingItemInfo);
         dialogFragment.show(getFragmentManager(),AddItemDialogFragment.class.getSimpleName());
     }
+
+
 }

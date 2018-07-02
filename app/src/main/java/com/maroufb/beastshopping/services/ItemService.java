@@ -48,8 +48,23 @@ public class ItemService {
 
     }
 
-    public static class ChangeItemNameResponse extends ServiceResponse{
+    public static class ChangeItemNameResponse extends ServiceResponse{}
 
+    public static class ChangeItemBoughtStatusRequest{
+        public String itemId;
+        public String shoppingListId;
+        public String userEmail;
+        public String buyerEmail;
+        public boolean isBought;
+
+        public ChangeItemBoughtStatusRequest(String itemId, String shoppingListId, String userEmail, String buyerEmail, boolean isBought) {
+            this.itemId = itemId;
+            this.shoppingListId = shoppingListId;
+            this.userEmail = userEmail;
+            this.buyerEmail = buyerEmail;
+            this.isBought = isBought;
+        }
     }
+
 
 }
