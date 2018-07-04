@@ -77,6 +77,7 @@ public class ListDetailsActivity extends  BaseActivity{
         mShoppingId = getIntent().getStringArrayListExtra(SHOPPING_LIST_DETAILS).get(0);
         mShoppingName = getIntent().getStringArrayListExtra(SHOPPING_LIST_DETAILS).get(1);
         mShoppingOwner = getIntent().getStringArrayListExtra(SHOPPING_LIST_DETAILS).get(2);
+
         ButterKnife.bind(this);
         mProgressBar.setVisibility(View.GONE);
         mShoppingListReference =  FirebaseDatabase.getInstance().getReference().child("userShoppingList")
@@ -98,6 +99,7 @@ public class ListDetailsActivity extends  BaseActivity{
                         .setQuery(reference, ShoppingItem.class)
                         .build();
         mAdapter = new FirebaseRecyclerAdapter<ShoppingItem,ShoppingItemViewHolder>(options){
+
             @NonNull
             @Override
             public ShoppingItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -199,6 +201,17 @@ public class ListDetailsActivity extends  BaseActivity{
             case android.R.id.home:
                 onBackPressed();
                 return true;
+
+            case R.id.action_share_list:
+
+
+
+                ArrayList<String> sshoppingListInfo = new ArrayList<>();
+                sshoppingListInfo.add(mShoppingId);
+                sshoppingListInfo.add(mShoppingName);
+                sshoppingListInfo.add(mShoppingOwner);
+                startActivity(ShareListActivity.newInstance(getApplicationContext(),sshoppingListInfo));
+
 
         }
         return true;
