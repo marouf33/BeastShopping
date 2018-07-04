@@ -34,4 +34,8 @@ public class AddFriendViewHolder extends RecyclerView.ViewHolder {
 
 
     }
+
+    public void populate(String name){
+        userEmail.setText(name);
+    }
 }

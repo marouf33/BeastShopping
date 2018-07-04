@@ -13,9 +13,9 @@ public class Utils {
     public static final String ORDER_BY_KEY = "orderByPushKey";
 
     public static String encodeEmail(String userEmail){
-        return userEmail.replace(".",",");
+        return userEmail == null ? "" :userEmail.replace(".",",");
     }
 
-    public static String decodeEmail(String userEmail) { return userEmail.replace(",","."); }
+    public static String decodeEmail(String userEmail) { return userEmail == null ? "" : userEmail.replace(",","."); }
 
 }

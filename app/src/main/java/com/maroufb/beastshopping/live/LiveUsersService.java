@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.maroufb.beastshopping.enitites.SharedFriends;
 import com.maroufb.beastshopping.enitites.Users;
 import com.maroufb.beastshopping.infrastructure.BeastShoppingApplication;
 import com.maroufb.beastshopping.services.GetUsersService;
@@ -22,6 +23,24 @@ public class LiveUsersService extends BaseLiveService {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 response.mUsersFriends = dataSnapshot.getValue(Users.class);
+                bus.post(response);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(mApplication.getApplicationContext(),databaseError.getMessage(),Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+    @Subscribe public void getUsersSharedWithFriends(GetUsersService.GetSharedWithFriendsRequest request){
+        final GetUsersService.GetSharedWithFriendsResponse response = new GetUsersService.GetSharedWithFriendsResponse();
+        response.mValueEventListener = request.mFirebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                response.mSharedFriends = dataSnapshot.getValue(SharedFriends.class);
                 bus.post(response);
 
             }
