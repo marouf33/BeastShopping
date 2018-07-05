@@ -41,13 +41,7 @@ public class LiveShoppingService extends BaseLiveService {
            timestampedCreated.put("timestamp", ServerValue.TIMESTAMP);
            ShoppingList shoppingList = new ShoppingList(reference.getKey(),request.shoppingListName,
                    Utils.decodeEmail(request.ownerEmail),request.ownerName,timestampedCreated);
-           reference.child("id").setValue(shoppingList.getId());
-           reference.child("listName").setValue(shoppingList.getListName());
-           reference.child("ownerEmail").setValue(shoppingList.getOwnerEmail());
-           reference.child("ownerName").setValue(shoppingList.getOwnerName());
-           reference.child("dateCreated").setValue(shoppingList.getDateCreated());
-           reference.child("dateLastChanged").setValue(shoppingList.getDateLastChanged());
-
+           reference.setValue(shoppingList);
 
            Toast.makeText(mApplication.getApplicationContext(),"List has been created!",Toast.LENGTH_LONG).show();
        }

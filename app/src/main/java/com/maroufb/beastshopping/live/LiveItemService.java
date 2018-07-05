@@ -33,12 +33,7 @@ public class LiveItemService extends BaseLiveService {
                     .child(request.ownerEmail).child(request.shoppingList);
 
             ShoppingItem shoppingItem = new ShoppingItem(reference.getKey(),request.itemName,request.ownerEmail,"",false);
-            reference.child("id").setValue(shoppingItem.getId());
-            reference.child("itemName").setValue(shoppingItem.getItemName());
-            reference.child("ownerEmail").setValue(shoppingItem.getOwnerEmail());
-            reference.child("boughtBy").setValue(shoppingItem.getBoughtBy());
-            reference.child("bought").setValue(shoppingItem.isBought());
-
+            reference.setValue(shoppingItem);
             HashMap<String,Object> timeLastChanged = new HashMap<>();
             timeLastChanged.put("date", ServerValue.TIMESTAMP);
 

@@ -72,11 +72,8 @@ public class LiveAccountServices extends BaseLiveService {
 
                                                     HashMap<String, Object> timeJoined = new HashMap<>();
                                                     timeJoined.put("dateJoined", ServerValue.TIMESTAMP);
-
-                                                    reference.child("email").setValue(request.userEmail);
-                                                    reference.child("name").setValue(request.userName);
-                                                    reference.child("hasLoggedInWithPassword").setValue(false);
-                                                    reference.child("timeJoined").setValue(timeJoined);
+                                                    User newUser = new User(request.userEmail,request.userName,timeJoined,false);
+                                                    reference.setValue(newUser);
 
                                                     Toast.makeText(mApplication.getApplicationContext(),"Please Check Your Email", Toast.LENGTH_LONG).show();
                                                     request.mProgressBar.setVisibility(View.GONE);
@@ -175,11 +172,9 @@ public class LiveAccountServices extends BaseLiveService {
                             if(dataSnapshot.getValue() == null){
                                 HashMap<String, Object> timeJoined = new HashMap<>();
                                 timeJoined.put("dateJoined", ServerValue.TIMESTAMP);
+                                User newUser = new User(request.userEmail,request.userName,timeJoined,true);
+                                reference.setValue(newUser);
 
-                                reference.child("email").setValue(request.userEmail);
-                                reference.child("name").setValue(request.userName);
-                                reference.child("hasLoggedInWithPassword").setValue(true);
-                                reference.child("timeJoined").setValue(timeJoined);
                             }
                         }
 
