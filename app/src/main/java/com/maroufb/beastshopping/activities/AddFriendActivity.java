@@ -71,13 +71,13 @@ public class AddFriendActivity extends BaseActivity {
             @Override
             protected void onBindViewHolder(@NonNull final AddFriendViewHolder holder, int position, @NonNull final User model) {
                 holder.populate(model);
-
-                if(isFriend(currentUserFriends.getUsersFriends(),model)){
-                    holder.userImageView.setImageResource(R.mipmap.ic_done);
-                }else{
-                    holder.userImageView.setImageResource(R.mipmap.ic_pluss);
+                if(currentUserFriends !=null) {
+                    if (isFriend(currentUserFriends.getUsersFriends(), model)) {
+                        holder.userImageView.setImageResource(R.mipmap.ic_done);
+                    } else {
+                        holder.userImageView.setImageResource(R.mipmap.ic_pluss);
+                    }
                 }
-
                 holder.userImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

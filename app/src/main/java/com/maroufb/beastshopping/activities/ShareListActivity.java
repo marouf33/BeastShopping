@@ -81,10 +81,12 @@ public class ShareListActivity extends  BaseActivity {
             @Override
             protected void onBindViewHolder(@NonNull final AddFriendViewHolder holder, int position, @NonNull final User model) {
                 holder.populate(model.getName());
-                if(sharedWithUserFriends != null && sharedWithFriend(sharedWithUserFriends.getSharedWith(),model)){
-                    holder.userImageView.setImageResource(R.mipmap.ic_done);
-                }else{
-                    holder.userImageView.setImageResource(R.mipmap.ic_pluss);
+                if (sharedWithUserFriends != null) {
+                    if (sharedWithFriend(sharedWithUserFriends.getSharedWith(), model)) {
+                        holder.userImageView.setImageResource(R.mipmap.ic_done);
+                    } else {
+                        holder.userImageView.setImageResource(R.mipmap.ic_pluss);
+                    }
                 }
 
                 holder.userImageView.setOnClickListener(new View.OnClickListener() {
