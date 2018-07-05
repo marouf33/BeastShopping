@@ -70,4 +70,14 @@ public class ShoppingListService {
     }
 
 
+
+    public static class UpdateShoppingListTimeStampRequest {
+        public DatabaseReference FirebaseReference;
+
+        public UpdateShoppingListTimeStampRequest(DatabaseReference firebaseReference) {
+            FirebaseReference = firebaseReference;
+        }
+    }
+
+
 }

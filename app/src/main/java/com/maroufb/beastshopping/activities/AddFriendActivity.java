@@ -88,6 +88,7 @@ public class AddFriendActivity extends BaseActivity {
                             final DatabaseReference friendsReference = FirebaseDatabase.getInstance().getReference().child("usersFriends")
                                     .child(userEmail).child("usersFriends").child(Utils.encodeEmail(model.getEmail()));
 
+
                             if(isFriend(currentUserFriends.getUsersFriends(),model)){
                                 friendsReference.removeValue();
                                 holder.userImageView.setImageResource(R.mipmap.ic_pluss);

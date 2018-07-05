@@ -107,5 +107,14 @@ public class LiveShoppingService extends BaseLiveService {
         });
     }
 
+    @Subscribe
+    public void UpdateShoppingListTimeStamp(ShoppingListService.UpdateShoppingListTimeStampRequest request){
+        HashMap<String,Object> timeLastChanged = new HashMap<>();
+        timeLastChanged.put("date",ServerValue.TIMESTAMP);
+        Map newListData = new HashMap();
+        newListData.put("dateLastChanged",timeLastChanged);
+        request.FirebaseReference.updateChildren(newListData);
+    }
+
 
 }

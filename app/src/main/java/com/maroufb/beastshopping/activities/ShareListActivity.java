@@ -23,14 +23,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.maroufb.beastshopping.R;
 import com.maroufb.beastshopping.enitites.SharedFriends;
+import com.maroufb.beastshopping.enitites.ShoppingList;
 import com.maroufb.beastshopping.enitites.User;
 import com.maroufb.beastshopping.infrastructure.Utils;
 import com.maroufb.beastshopping.services.GetUsersService;
+import com.maroufb.beastshopping.services.ShoppingListService;
 import com.maroufb.beastshopping.views.AddFriendView.AddFriendViewHolder;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ShareListActivity extends  BaseActivity {
 
@@ -38,8 +42,11 @@ public class ShareListActivity extends  BaseActivity {
     private String mShoppingId;
 
     private DatabaseReference sharedListsReference;
+    private DatabaseReference mShoppingListReference;
     private ValueEventListener mValueEventListener;
+    private ValueEventListener mShoppingListListener;
     private SharedFriends sharedWithUserFriends;
+    private ShoppingList mCurrentShoppingList;
 
     public static Intent newInstance(Context context, ArrayList<String> shoppingListInfo){
         Intent intent = new Intent(context,ShareListActivity.class);
@@ -59,7 +66,10 @@ public class ShareListActivity extends  BaseActivity {
 
         sharedListsReference = FirebaseDatabase.getInstance().getReference().child("sharedWith")
                 .child(mShoppingId);
+        mShoppingListReference = FirebaseDatabase.getInstance().getReference().child("userShoppingList")
+                .child(userEmail).child(mShoppingId);
         bus.post(new GetUsersService.GetSharedWithFriendsRequest(sharedListsReference));
+        bus.post(new ShoppingListService.GetCurrentShoppingListRequest(mShoppingListReference));
         final DatabaseReference friendsReference = FirebaseDatabase.getInstance().getReference().child("usersFriends")
                 .child(userEmail).child("usersFriends");
 
@@ -71,7 +81,7 @@ public class ShareListActivity extends  BaseActivity {
             @Override
             protected void onBindViewHolder(@NonNull final AddFriendViewHolder holder, int position, @NonNull final User model) {
                 holder.populate(model.getName());
-                if(sharedWithFriend(sharedWithUserFriends.getSharedWith(),model)){
+                if(sharedWithUserFriends != null && sharedWithFriend(sharedWithUserFriends.getSharedWith(),model)){
                     holder.userImageView.setImageResource(R.mipmap.ic_done);
                 }else{
                     holder.userImageView.setImageResource(R.mipmap.ic_pluss);
@@ -83,21 +93,22 @@ public class ShareListActivity extends  BaseActivity {
 
                         final DatabaseReference shareReference = FirebaseDatabase.getInstance().getReference().child("sharedWith")
                                 .child(mShoppingId).child("sharedWith").child(Utils.encodeEmail(model.getEmail()));
+                        final DatabaseReference friendsShoppingListReference  = FirebaseDatabase.getInstance().getReference().child("userShoppingList")
+                                .child(Utils.encodeEmail(model.getEmail())).child(mShoppingId);
 
                         if(sharedWithFriend(sharedWithUserFriends.getSharedWith(),model)){
+                            Map newListData = new HashMap();
+                            newListData.put("listName","CListIsAboutToGetDeleted");
+                            friendsShoppingListReference.updateChildren(newListData);
                             shareReference.removeValue();
+                            friendsShoppingListReference .removeValue();
                             holder.userImageView.setImageResource(R.mipmap.ic_pluss);
+                            updateAllShoppingListReference(sharedWithUserFriends.getSharedWith(),mCurrentShoppingList,bus,true);
                         }else {
-                            shareReference.setValue(model).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(!task.isSuccessful()){
-                                        Toast.makeText(getApplicationContext(),task.getException().getLocalizedMessage(),Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-
+                            shareReference.setValue(model);
+                            friendsShoppingListReference.setValue(mCurrentShoppingList);
                             holder.userImageView.setImageResource(R.mipmap.ic_done);
+                            updateAllShoppingListReference(sharedWithUserFriends.getSharedWith(),mCurrentShoppingList,bus,false);
                         }
                     }
                 });
@@ -182,5 +193,38 @@ public class ShareListActivity extends  BaseActivity {
         }else{
             sharedWithUserFriends = new SharedFriends();
         }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void getCurrentShoppingList(ShoppingListService.GetCurrentShoppingListResponse response){
+        mCurrentShoppingList = response.mShoppingList;
+        mShoppingListListener = response.mValueEventListener;
+    }
+
+    public static void updateAllShoppingListReference(HashMap<String,User> usersSharedWith, ShoppingList shoppingList, Bus bus
+            ,boolean deletingList){
+
+        if (usersSharedWith !=null && !usersSharedWith.isEmpty()){
+            for(User user: usersSharedWith.values()){
+                if (usersSharedWith.containsKey(Utils.encodeEmail(user.getEmail())))
+                {
+                    final DatabaseReference friendListsReference =
+                             FirebaseDatabase.getInstance().getReference().child("userShoppingList")
+                                    .child(Utils.encodeEmail(user.getEmail())).child(shoppingList.getId());
+
+                    if (!deletingList){
+                        bus.post(new ShoppingListService.UpdateShoppingListTimeStampRequest(friendListsReference));
+                    }
+                }
+            }
+        }
+
+
+        final DatabaseReference ownerReference = FirebaseDatabase.getInstance().getReference().child("userShoppingList")
+                .child(Utils.encodeEmail(shoppingList.getOwnerEmail())).child(shoppingList.getId());
+
+
+        bus.post(new ShoppingListService.UpdateShoppingListTimeStampRequest(ownerReference));
     }
 }

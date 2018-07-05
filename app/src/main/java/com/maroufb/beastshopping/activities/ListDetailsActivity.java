@@ -150,6 +150,9 @@ public class ListDetailsActivity extends  BaseActivity{
                             }
 
                             bus.post(new ItemService.ChangeItemBoughtStatusRequest(model.getId(), mShoppingId, model.getOwnerEmail(), buyer, !model.isBought()));
+                        }else {
+                            Toast.makeText(getApplicationContext(),"Only the person who bought can un buy this item",Toast.LENGTH_LONG)
+                                    .show();
                         }
                     }
                 });
@@ -231,6 +234,12 @@ public class ListDetailsActivity extends  BaseActivity{
         mShoppingListListener = response.mValueEventListener;
         mCurrentShoppingList = response.mShoppingList;
         getSupportActionBar().setTitle(mCurrentShoppingList.getListName());
+
+        if(mCurrentShoppingList.getListName().equals("CListIsAboutToGetDeleted")){
+            onBackPressed();
+        }else{
+            getSupportActionBar().setTitle(mCurrentShoppingList.getListName());
+        }
     }
 
     @Override
